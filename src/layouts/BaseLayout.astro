@@ -9,32 +9,35 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
+const path = Astro.url.pathname;
+const isHome = path === '/';
+const isProject = path.startsWith('/projects');
 
-// Resolve font URL via Vite so preload matches the hashed build asset
-import syneWoff2 from '@fontsource-variable/syne/files/syne-latin-wght-normal.woff2?url';
+import bricolageWoff2 from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2?url';
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <Seo title={title} description={description} />
-    <link rel="preload" href={syneWoff2} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={bricolageWoff2} as="font" type="font/woff2" crossorigin />
     <ClientRouter />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header site-shell">
+    <header class="site-header">
       <a class="site-header__mark" href="/" transition:name="brand">unnamed</a>
-      <nav class="site-header__nav" aria-label="Primary">
-        <a href="/#work">Work</a>
-      </nav>
+      <div class="site-header__right">
+        <a class="site-header__navlink" href="/#work">{isHome ? 'Work' : '← Work'}</a>
+        {isProject && <span class="site-header__pill">Case study</span>}
+      </div>
     </header>
     <main id="main">
       <slot />
     </main>
-    <footer class="site-footer site-shell">
+    <footer class="site-footer">
       <p>© {new Date().getFullYear()} unnamed</p>
-      <p>Designed &amp; built as a static Astro site</p>
+      <p>Product design</p>
     </footer>
   </body>
 </html>
@@ -45,13 +48,14 @@ import syneWoff2 from '@fontsource-variable/syne/files/syne-latin-wght-normal.wo
     left: var(--space-3);
     top: var(--space-3);
     transform: translateY(-200%);
-    background: var(--color-foam);
-    color: var(--color-ink);
+    background: var(--color-ink);
+    color: var(--color-on-ink);
     padding: 0.6rem 1rem;
     z-index: 100;
-    border-radius: 0.25rem;
+    border-radius: 100px;
     text-decoration: none;
     font-family: var(--font-display);
+    font-weight: 700;
   }
 
   .skip-link:focus {

@@ -1,0 +1,102 @@
+---
+interface Props {
+  label: string;
+}
+
+const { label } = Astro.props;
+---
+
+<aside class="case-band" aria-label={label}>
+  <div class="site-shell">
+    <p class="case-band__kicker">{label}</p>
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .case-band {
+    margin-top: var(--space-5);
+    padding-block: var(--space-6);
+    background: var(--gradient-band), var(--color-lift);
+    border-block: 1.5px solid var(--color-rule);
+  }
+
+  .case-band__kicker,
+  .case-band :global(.split-read__kicker) {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-deep);
+    margin-bottom: var(--space-4);
+  }
+
+  .case-band :global(.metrics) {
+    display: grid;
+    gap: var(--space-5) var(--space-4);
+    min-width: 0;
+  }
+
+  .case-band :global(.metrics--lead) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .case-band :global(.metrics li) {
+    display: grid;
+    align-content: start;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  .case-band :global(.metrics__value) {
+    font-weight: 800;
+    letter-spacing: -0.055em;
+    line-height: 0.88;
+    font-size: clamp(3.2rem, 8vw, 6.5rem);
+  }
+
+  .case-band :global(.metrics--sub .metrics__value) {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+  }
+
+  .case-band :global(.metrics__label) {
+    max-width: 18ch;
+    color: var(--color-foam-muted);
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .case-band :global(.metrics--lead + .metrics),
+  .case-band :global(.metrics--lead + .split-read) {
+    margin-top: var(--space-5);
+  }
+
+  .case-band :global(.split-read) {
+    display: grid;
+    gap: var(--space-2);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .case-band :global(.split-read__kicker:not(:first-child)) {
+    margin-top: var(--space-4);
+  }
+
+  @media (min-width: 720px) {
+    .case-band :global(.metrics--lead),
+    .case-band :global(.metrics--sub) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .case-band :global(.metrics--sub) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .case-band :global(.split-read .metrics--sub) {
+      grid-template-columns: 1fr 1fr;
+      max-width: 40rem;
+    }
+  }
+</style>

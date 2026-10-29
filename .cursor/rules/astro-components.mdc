@@ -1,0 +1,37 @@
+---
+description: How Astro component files are shaped and composed
+globs: src/**/*.astro
+alwaysApply: false
+---
+
+# Astro components
+
+Write each `.astro` file in this order:
+
+1. Frontmatter: imports, a short `Props` interface, plain prop names, a few lines of logic.
+2. HTML: semantic tags (`section`, `h1`–`h3`, `ul`, `a`, `dl`).
+3. One `<style>` block for classes used only in this file.
+
+```astro
+---
+interface Props {
+  title: string;
+  summary: string;
+  year: number;
+}
+const { title, summary, year } = Astro.props;
+---
+
+<article class="project-card">
+  <h2 class="project-card__title">{title}</h2>
+</article>
+
+<style>
+  .project-card__title { font-size: var(--type-title); }
+</style>
+```
+
+- One block name per component: `hero`, `project-card`, `case`.
+- Pages assemble components; they do not hold an entire screen in one file.
+- When the same HTML chunk appears in two files, extract a component.
+- Use `<script>` or `client:*` only when HTML and CSS cannot do the job.

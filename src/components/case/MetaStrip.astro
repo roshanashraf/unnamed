@@ -1,0 +1,79 @@
+---
+interface MetaItem {
+  label: string;
+  value: string;
+}
+
+interface Props {
+  items: MetaItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="site-shell">
+  <dl class="meta-strip">
+    {
+      items.map((item) => (
+        <div>
+          <dt>{item.label}</dt>
+          <dd>{item.value}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</div>
+
+<style>
+  .meta-strip {
+    border-top: 1.5px solid var(--color-rule);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-top: clamp(30px, 5svh, 54px);
+    text-align: left;
+  }
+
+  .meta-strip > div {
+    padding: clamp(14px, 2vw, 22px) clamp(18px, 3vw, 44px);
+    border-left: 1px solid var(--color-hair);
+    min-width: 0;
+  }
+
+  .meta-strip > div:first-child {
+    border-left: 0;
+  }
+
+  .meta-strip dt {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 6px;
+  }
+
+  .meta-strip dd {
+    font-size: clamp(12.5px, 1.15vw, 14.5px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+
+  @media (max-width: 860px) {
+    .meta-strip {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .meta-strip > div {
+      border-top: 1px solid var(--color-hair);
+    }
+
+    .meta-strip > div:nth-child(-n + 2) {
+      border-top: 0;
+    }
+
+    .meta-strip > div:nth-child(3) {
+      border-left: 0;
+    }
+  }
+</style>

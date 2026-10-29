@@ -1,161 +1,51 @@
 ---
 import { getCollection, render } from 'astro:content';
-import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Prose from '../../components/Prose.astro';
+import ProjectStub from '../../components/ProjectStub.astro';
+import { getProjectView } from '../../projects/registry';
 
 export async function getStaticPaths() {
-  const projects = await getCollection('projects');
-  return projects.map((project) => ({
-    params: { slug: project.id },
-    props: { project },
-  }));
+  const projects = (await getCollection('projects')).sort(
+    (a, b) => a.data.order - b.data.order || b.data.year - a.data.year,
+  );
+  return projects.map((project, index) => {
+    const following = projects[index + 1];
+    return {
+      params: { slug: project.id },
+      props: {
+        project,
+        next: following
+          ? { href: `/projects/${following.id}`, title: following.data.title }
+          : null,
+      },
+    };
+  });
 }
 
-const { project } = Astro.props;
+const { project, next } = Astro.props;
 const { Content } = await render(project);
 const title = project.data.seo?.title ?? `${project.data.title} — unnamed`;
 const description = project.data.seo?.description ?? project.data.summary;
 const isStub = project.data.status === 'stub';
+const View = getProjectView(project.id);
 ---
 
 <BaseLayout title={title} description={description}>
-  <article class="project site-shell">
-    <header class="project__header motion-rise">
-      <p class="project__meta">
-        <span>{project.data.year}</span>
-        <span aria-hidden="true">·</span>
-        <span>{project.data.role}</span>
-        {
-          isStub && (
-            <>
-              <span aria-hidden="true">·</span>
-              <span>Coming soon</span>
-            </>
-          )
-        }
-      </p>
-      <h1 class="project__title" transition:name={`title-${project.id}`}>
-        {project.data.title}
-      </h1>
-      <p class="project__summary motion-rise motion-delay-1">{project.data.summary}</p>
-      {
-        project.data.tags.length > 0 && (
-          <p class="project__tags motion-fade motion-delay-2">{project.data.tags.join(' / ')}</p>
-        )
-      }
-    </header>
-
-    {
-      project.data.cover && (
-        <div class="project__cover motion-fade motion-delay-1" transition:name={`cover-/projects/${project.id}`}>
-          <Image
-            src={project.data.cover}
-            alt=""
-            widths={[720, 1200, 1600]}
-            sizes="(max-width: 900px) 100vw, 72rem"
-            loading="eager"
-            fetchpriority="high"
-          />
-        </div>
-      )
-    }
-
-    <div class="project__body motion-rise motion-delay-2">
-      {
-        isStub ? (
-          <Prose>
-            <p>
-              This case study is a Phase 1 stub. Narrative, process, and outcomes will land here
-              without changing routes or the content model.
-            </p>
-          </Prose>
-        ) : (
-          <Prose>
-            <Content />
-          </Prose>
-        )
-      }
-    </div>
-
-    <p class="project__back">
-      <a href="/#work">← All work</a>
-    </p>
-  </article>
+  {
+    View ? (
+      <View year={project.data.year} role={project.data.role} next={next} />
+    ) : (
+      <ProjectStub
+        id={project.id}
+        title={project.data.title}
+        summary={project.data.summary}
+        year={project.data.year}
+        role={project.data.role}
+        tags={project.data.tags}
+        isStub={isStub}
+        cover={project.data.cover}
+        Content={isStub ? undefined : Content}
+      />
+    )
+  }
 </BaseLayout>
-
-<style>
-  .project {
-    padding-block: var(--space-5) var(--space-7);
-  }
-
-  .project__header {
-    display: grid;
-    gap: var(--space-3);
-    max-width: 40rem;
-    margin-bottom: var(--space-5);
-  }
-
-  .project__meta {
-    font-size: var(--type-meta);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-fog);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .project__title {
-    font-family: var(--font-display);
-    font-weight: 750;
-    font-size: var(--type-title);
-    letter-spacing: -0.04em;
-    line-height: 1.05;
-  }
-
-  .project__summary {
-    font-size: var(--type-hero);
-    line-height: 1.3;
-    max-width: 28ch;
-  }
-
-  .project__tags {
-    color: var(--color-accent);
-    font-size: var(--type-meta);
-    letter-spacing: 0.04em;
-  }
-
-  .project__cover {
-    margin-bottom: var(--space-5);
-    overflow: hidden;
-    border-radius: 0.15rem;
-    background: var(--color-ink-elevated);
-  }
-
-  .project__cover :global(img) {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 10;
-    object-fit: cover;
-  }
-
-  .project__body {
-    margin-bottom: var(--space-6);
-  }
-
-  .project__back a {
-    font-family: var(--font-display);
-    font-weight: 600;
-    text-decoration: none;
-    min-height: var(--tap);
-    display: inline-flex;
-    align-items: center;
-    color: var(--color-foam-muted);
-    transition: color var(--dur-fast) var(--ease-soft);
-  }
-
-  .project__back a:hover {
-    color: var(--color-foam);
-  }
-</style>

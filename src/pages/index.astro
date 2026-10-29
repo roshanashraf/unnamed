@@ -1,13 +1,17 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
 import ProjectList from '../components/ProjectList.astro';
+
+const reel = ['Clarity', 'Fare clarity', 'Quiet booking', 'Signal to system'];
 ---
 
 <BaseLayout
   title="unnamed — UX portfolio"
-  description="Selected product design work by unnamed. Stories coming soon."
+  description="Selected product design work. Clarity is a case study on making every outstation booking self-explanatory."
 >
   <Hero />
+  <Marquee items={reel} />
   <ProjectList />
 </BaseLayout>

@@ -1,0 +1,26 @@
+---
+description: Where tokens, global CSS, and component styles belong
+globs: src/**/*.{astro,css}
+alwaysApply: false
+---
+
+# CSS structure
+
+| What you are adding | Where it goes |
+|---------------------|---------------|
+| Color, type size, space, duration | `tokens.css` as `--color-*`, `--type-*`, `--space-*`, `--dur-*` |
+| Pattern on many pages (`.btn`, `.site-shell`, `.prose`, header, footer) | `global.css` |
+| Layout and look for one component | That component’s `<style>` (scoped at build time; no extra request) |
+
+```css
+/* tokens.css — name the value once */
+--space-4: 1.5rem;
+
+/* global.css — shared button */
+.btn--ink { background: var(--color-ink); }
+
+/* Hero.astro <style> — only this hero */
+.hero__brand { font-size: var(--type-brand); }
+```
+
+Naming: `block__element` and `block--modifier` (`.btn`, `.btn--ink`). Keep selectors shallow: one class, or class plus `:hover` / `:focus-visible`. No `!important`, no deep nesting, no raw hex when a token exists. Motion: `transform` and `opacity` with `var(--dur-*)` and `var(--ease-*)`.

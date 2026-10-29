@@ -1,24 +1,42 @@
 :root {
-  /* Atmosphere — deep ink with cool moss undertone (not purple, not cream) */
-  --color-ink: #070a09;
-  --color-ink-elevated: #0e1513;
-  --color-fog: #9aafa6;
-  --color-foam: #e6eee9;
-  --color-foam-muted: rgba(230, 238, 233, 0.72);
-  --color-accent: #7fbf9a;
-  --color-accent-soft: rgba(127, 191, 154, 0.18);
-  --color-line: rgba(230, 238, 233, 0.12);
-  --color-glow-a: rgba(36, 92, 78, 0.45);
-  --color-glow-b: rgba(18, 48, 70, 0.4);
+  /* Firevalle case-study palette — paper field, olive ink, lime and orange marks */
+  --color-paper: #eae6d9;
+  --color-ink: #1c2419;
+  --color-ink-rgb: 28, 36, 25;
+  --color-on-ink: #f2f0e6;
+  --color-body: #3b4436;
+  --color-orange: #ff6b45;
+  --color-lime: #b9f54a;
+  --color-green: #75b967;
+  --color-deep: #4f8b48;
+  --color-yellow: #fff48d;
+  --color-yellow-rgb: 255, 244, 141;
+  --color-night: #0e0e0c;
+  --color-night-muted: #cfcfc4;
+  --color-night-dim: #8f8f80;
+  --color-lift: #f4f1e6;
+  --color-hair: rgba(28, 36, 25, 0.14);
+  --color-rule: rgba(28, 36, 25, 0.55);
+  --color-grid: rgba(28, 36, 25, 0.055);
 
-  --font-display: 'Syne Variable', 'Syne', 'Avenir Next', 'Segoe UI', sans-serif;
-  --font-body: 'Literata Variable', 'Literata', 'Iowan Old Style', 'Palatino Linotype', Palatino, serif;
+  /* Names already used in components. foam is primary text on paper. */
+  --color-ink-elevated: var(--color-lift);
+  --color-fog: rgba(28, 36, 25, 0.5);
+  --color-foam: var(--color-ink);
+  --color-foam-muted: var(--color-body);
+  --color-accent: var(--color-deep);
+  --color-accent-soft: rgba(185, 245, 74, 0.45);
+  --color-line: var(--color-hair);
 
-  --type-brand: clamp(3.5rem, 14vw, 9.5rem);
-  --type-hero: clamp(1.35rem, 3.6vw, 2rem);
-  --type-title: clamp(1.75rem, 4vw, 3rem);
-  --type-body: clamp(1.05rem, 1.5vw, 1.2rem);
-  --type-meta: 0.8rem;
+  --font-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, monospace;
+
+  --type-brand: clamp(4.4rem, 16vw, 12.5rem);
+  --type-hero: clamp(1.02rem, 2.1vw, 1.4rem);
+  --type-title: clamp(2.1rem, 5vw, 3.7rem);
+  --type-body: clamp(15px, 1.65vw, 17px);
+  --type-meta: 10.5px;
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -29,12 +47,21 @@
   --space-7: 6.5rem;
   --space-8: 9rem;
 
-  --width-content: 72rem;
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --width-content: 77.5rem;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
-  --dur-fast: 180ms;
+  --dur-fast: 200ms;
   --dur-med: 520ms;
   --dur-slow: 900ms;
+  --iso: 86px;
 
   --tap: 44px;
+
+  --shadow-media: 0 30px 60px -34px rgba(var(--color-ink-rgb), 0.55);
+  --shadow-media-soft: 0 30px 60px -34px rgba(var(--color-ink-rgb), 0.35);
+  --gradient-plate-after: linear-gradient(165deg, rgba(185, 245, 74, 0.38), transparent 48%);
+  --gradient-plate-fallback: linear-gradient(145deg, rgba(185, 245, 74, 0.55), transparent 46%),
+    linear-gradient(320deg, rgba(255, 107, 69, 0.28), transparent 42%);
+  --gradient-band: linear-gradient(180deg, rgba(185, 245, 74, 0.34), transparent 42%);
 }

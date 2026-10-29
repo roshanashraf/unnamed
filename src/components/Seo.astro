@@ -7,7 +7,7 @@ interface Props {
 
 const {
   title = 'unnamed — UX portfolio',
-  description = 'Selected product design work. Stories coming soon.',
+  description = 'Selected product design work.',
   canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : Astro.url.href,
 } = Astro.props;
 ---
@@ -23,5 +23,5 @@ const {
 <meta property="og:type" content="website" />
 <meta property="og:url" content={canonical} />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="theme-color" content="#070a09" />
+<meta name="theme-color" content="#eae6d9" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

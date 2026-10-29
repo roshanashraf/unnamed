@@ -1,0 +1,44 @@
+---
+description: Reuse existing components and styles, keep pages very fast, and write code a less experienced person can read and edit
+alwaysApply: true
+---
+
+# Project constraints
+
+Reuse what already exists. Keep every page very fast to load. Write code a person with less coding knowledge can open, understand, and change.
+
+## Reuse components and styles
+
+Before adding markup, a class, or a color, look in `src/components/` and `src/styles/`.
+
+- Use an existing component (`Hero`, `ProjectCard`, `ProjectList`, `Prose`, `Seo`, `BaseLayout`). Add a prop when the same component needs a small variation.
+- Colors, type, spacing, and motion come from `src/styles/tokens.css` (`--color-*`, `--type-*`, `--space-*`, `--dur-*`). Shared classes live in `src/styles/global.css` (`.site-shell`, `.project-card`, and the rest).
+- Add a new component or class only when nothing current fits. Shared patterns go in `global.css`; classes used by one component go in that component’s `<style>` block.
+
+```astro
+<!-- Reuse the token and the shared class -->
+<h2 class="project-card__title">{title}</h2>
+```
+
+```css
+/* New color or space belongs in tokens.css, then get used by name */
+color: var(--color-ink);
+margin-top: var(--space-4);
+```
+
+## Very fast load
+
+The page should arrive as plain HTML and one stylesheet.
+
+- Stay with Astro components. Skip React, Vue, and Svelte, and skip `client:*`, unless a control cannot work without JavaScript.
+- Keep styles in `global.css`, which already imports `tokens.css` and `reset.css`. Skip extra stylesheets, CSS-in-JS, icon fonts, and extra web fonts.
+- Photos go through Astro `<Image>` with set widths. The first image on screen loads eagerly. Every later image is lazy.
+- Skip animation libraries, analytics, and new packages when CSS or a few lines of HTML can do the job.
+
+## Easy for a person to edit
+
+- One file shows one thing on the page. Name the file after that thing: `ProjectCard.astro`.
+- Write ordinary HTML and CSS class names in everyday words: `project-card__title`.
+- Keep any logic in a few lines at the top of the file. Props have plain names (`title`, `summary`, `year`).
+- Repeat a short block of HTML when it appears once or twice. Add a component when the same block is used in more than one place.
+- When a trick needs a comment to explain it, replace the trick with the straightforward version.

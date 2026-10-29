@@ -1,0 +1,81 @@
+---
+interface NextProject {
+  href: string;
+  title: string;
+}
+
+interface Props {
+  next: NextProject | null;
+}
+
+const { next } = Astro.props;
+---
+
+<nav class="case-next site-shell" aria-label="Continue">
+  {
+    next ? (
+      <a class="case-next__link" href={next.href}>
+        <span class="kicker">Next case study</span>
+        <span class="case-next__title">
+          {next.title}
+          <span aria-hidden="true"> →</span>
+        </span>
+      </a>
+    ) : (
+      <a class="case-next__link" href="/#work">
+        <span class="kicker">All work</span>
+        <span class="case-next__title">
+          Back to the list
+          <span aria-hidden="true"> →</span>
+        </span>
+      </a>
+    )
+  }
+</nav>
+
+<style>
+  .case-next {
+    margin-top: clamp(70px, 10vw, 140px);
+    padding: clamp(90px, 14vw, 170px) clamp(18px, 5vw, 44px);
+    background: var(--color-night);
+    color: var(--color-on-ink);
+    text-align: center;
+  }
+
+  .case-next :global(.kicker) {
+    justify-content: center;
+    color: rgba(242, 240, 230, 0.45);
+  }
+
+  .case-next :global(.kicker::before) {
+    background: var(--color-yellow);
+  }
+
+  .case-next__link {
+    display: inline-grid;
+    justify-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+    min-height: var(--tap);
+    color: inherit;
+  }
+
+  .case-next__title {
+    font-weight: 800;
+    font-size: clamp(1.7rem, 4.6vw, 3rem);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--color-on-ink);
+    transition: color 0.3s ease;
+  }
+
+  .case-next__link:hover .case-next__title {
+    color: var(--color-yellow);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .case-next__title {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,36 @@
+---
+description: Where pages, layouts, components, content, and styles live in this Astro site
+alwaysApply: true
+---
+
+# File structure
+
+Put each new file in the folder that matches its job. Do not add extra layers for one-off code.
+
+| Folder | Job |
+|--------|-----|
+| `src/pages/` | A URL. Pick `BaseLayout`, load content, place components. No long page design here. |
+| `src/layouts/` | The frame on every page: header, footer, `<Seo>`, global CSS import. |
+| `src/components/` | Site-wide pieces: `Hero`, `ProjectCard`, `ProjectStub`, `Marquee`. |
+| `src/components/case/` | Reusable case-study blocks: `CaseChapter`, `CaseBand`, `CasePlatePair`, `MetaStrip`. |
+| `src/components/projects/{slug}/` | One custom case study per folder (composer + sections for that project only). |
+| `src/projects/registry.ts` | Maps content slug → case-study component. Add one import + one line per bespoke project. |
+| `src/content/projects/` | Catalog frontmatter (title, year, role, cover, order, status, seo). Body optional for simple MDX stories. |
+| `src/content.config.ts` | The list of allowed frontmatter fields for projects. |
+| `src/styles/` | Only `reset.css`, `tokens.css`, and `global.css`. |
+
+```astro
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ProjectList from '../components/ProjectList.astro';
+---
+<BaseLayout title="…">
+  <Hero />
+  <ProjectList />
+</BaseLayout>
+```
+
+**Add a project:** full steps in [src/projects/README.md](../../src/projects/README.md). Short version: `{slug}.mdx` in content → optional `components/projects/{slug}/` → one line in `src/projects/registry.ts`. No registry entry → `ProjectStub`.
+
+Do not add `src/lib`, `src/utils`, `src/hooks`, or a new npm package for logic used once. If two components need the same value, pass a prop or read it from the content collection.

@@ -1,0 +1,22 @@
+---
+interface Props {
+  items: string[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="marq" aria-hidden="true">
+  <div class="marq__track">
+    {
+      [0, 1].map(() =>
+        items.map((title) => (
+          <>
+            <span>{title}</span>
+            <span class="st">✦</span>
+          </>
+        )),
+      )
+    }
+  </div>
+</div>

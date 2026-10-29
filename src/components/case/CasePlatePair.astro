@@ -1,0 +1,78 @@
+<div class="case-plate-pair">
+  <slot />
+</div>
+
+<style>
+  .case-plate-pair {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+    min-width: 0;
+  }
+
+  .case-plate-pair :global(.plate) {
+    border: 0;
+    background: var(--color-lift);
+    border-radius: clamp(16px, 2.2vw, 30px);
+    box-shadow: var(--shadow-media-soft);
+    padding: var(--space-4);
+    display: grid;
+    gap: var(--space-3);
+    align-content: start;
+  }
+
+  .case-plate-pair :global(.plate figcaption) {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+    opacity: 0.5;
+  }
+
+  .case-plate-pair :global(.plate ul) {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .case-plate-pair :global(.plate li) {
+    font-size: clamp(1.15rem, 2vw, 1.35rem);
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--color-body);
+  }
+
+  .case-plate-pair :global(.plate--after) {
+    background: var(--gradient-plate-after), var(--color-lift);
+  }
+
+  .case-plate-pair :global(.choices li) {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .case-plate-pair :global(.plate__lead),
+  .case-plate-pair :global(.plate__note) {
+    color: var(--color-foam-muted);
+  }
+
+  .case-plate-pair :global(.plate__lead) {
+    font-size: clamp(1.25rem, 2vw, 1.55rem);
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+    color: var(--color-foam);
+  }
+
+  .case-plate-pair :global(.plate__note) {
+    font-size: 0.95rem;
+  }
+
+  @media (min-width: 720px) {
+    .case-plate-pair {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

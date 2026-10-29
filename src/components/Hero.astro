@@ -1,0 +1,109 @@
+---
+interface Props {
+  brand?: string;
+  line?: string;
+  support?: string;
+}
+
+const {
+  brand = 'unnamed',
+  line = 'Product design for moments that need clarity.',
+  support = 'Selected UX work — stories in progress.',
+} = Astro.props;
+---
+
+<section class="hero site-shell" aria-labelledby="brand">
+  <div class="hero__atmosphere" aria-hidden="true"></div>
+  <p id="brand" class="hero__brand motion-rise" transition:name="hero-brand">{brand}</p>
+  <h1 class="hero__line motion-rise motion-delay-1">{line}</h1>
+  <p class="hero__support motion-rise motion-delay-2">{support}</p>
+  <div class="hero__cta motion-rise motion-delay-3">
+    <a class="hero__link" href="#work">View work</a>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: min(88vh, 52rem);
+    display: grid;
+    align-content: end;
+    gap: var(--space-4);
+    padding-block: var(--space-6) var(--space-7);
+    overflow: clip;
+  }
+
+  .hero__atmosphere {
+    position: absolute;
+    inset: 8% -8% auto auto;
+    width: min(70vw, 36rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 40% 40%, rgba(127, 191, 154, 0.28), transparent 58%),
+      radial-gradient(circle at 70% 60%, rgba(72, 120, 160, 0.22), transparent 55%);
+    filter: blur(8px);
+    z-index: -1;
+    pointer-events: none;
+    animation: fade-in var(--dur-slow) var(--ease-soft) both;
+  }
+
+  .hero__brand {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--type-brand);
+    line-height: 0.88;
+    letter-spacing: -0.06em;
+    max-width: 12ch;
+  }
+
+  .hero__line {
+    font-family: var(--font-body);
+    font-weight: 450;
+    font-size: var(--type-hero);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    max-width: 22ch;
+    color: var(--color-foam);
+  }
+
+  .hero__support {
+    color: var(--color-foam-muted);
+    max-width: 36ch;
+    font-size: 1.05rem;
+  }
+
+  .hero__cta {
+    margin-top: var(--space-2);
+  }
+
+  .hero__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    color: var(--color-ink);
+    background: var(--color-foam);
+    padding: 0.7rem 1.25rem;
+    border-radius: 0.2rem;
+    transition:
+      background var(--dur-fast) var(--ease-soft),
+      transform var(--dur-fast) var(--ease-soft);
+  }
+
+  .hero__link:hover {
+    background: var(--color-accent);
+    transform: translateY(-1px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__atmosphere {
+      animation: none;
+      filter: none;
+    }
+  }
+</style>

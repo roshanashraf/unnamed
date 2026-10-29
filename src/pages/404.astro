@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Not found — unnamed" description="This page does not exist.">
+  <section class="missing site-shell">
+    <p class="missing__brand">unnamed</p>
+    <h1 class="missing__title">Lost the thread.</h1>
+    <p class="missing__copy">That route isn’t part of this portfolio.</p>
+    <a class="missing__link" href="/">Back home</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .missing {
+    min-height: 60vh;
+    display: grid;
+    align-content: center;
+    gap: var(--space-3);
+    padding-block: var(--space-7);
+  }
+
+  .missing__brand {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--color-fog);
+  }
+
+  .missing__title {
+    font-family: var(--font-display);
+    font-size: var(--type-title);
+    letter-spacing: -0.04em;
+  }
+
+  .missing__copy {
+    color: var(--color-foam-muted);
+  }
+
+  .missing__link {
+    margin-top: var(--space-3);
+    width: fit-content;
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--color-ink);
+    background: var(--color-foam);
+    padding: 0.7rem 1.2rem;
+    min-height: var(--tap);
+    display: inline-flex;
+    align-items: center;
+  }
+</style>

@@ -1,0 +1,40 @@
+:root {
+  /* Atmosphere — deep ink with cool moss undertone (not purple, not cream) */
+  --color-ink: #070a09;
+  --color-ink-elevated: #0e1513;
+  --color-fog: #9aafa6;
+  --color-foam: #e6eee9;
+  --color-foam-muted: rgba(230, 238, 233, 0.72);
+  --color-accent: #7fbf9a;
+  --color-accent-soft: rgba(127, 191, 154, 0.18);
+  --color-line: rgba(230, 238, 233, 0.12);
+  --color-glow-a: rgba(36, 92, 78, 0.45);
+  --color-glow-b: rgba(18, 48, 70, 0.4);
+
+  --font-display: 'Syne Variable', 'Syne', 'Avenir Next', 'Segoe UI', sans-serif;
+  --font-body: 'Literata Variable', 'Literata', 'Iowan Old Style', 'Palatino Linotype', Palatino, serif;
+
+  --type-brand: clamp(3.5rem, 14vw, 9.5rem);
+  --type-hero: clamp(1.35rem, 3.6vw, 2rem);
+  --type-title: clamp(1.75rem, 4vw, 3rem);
+  --type-body: clamp(1.05rem, 1.5vw, 1.2rem);
+  --type-meta: 0.8rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2.5rem;
+  --space-6: 4rem;
+  --space-7: 6.5rem;
+  --space-8: 9rem;
+
+  --width-content: 72rem;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 180ms;
+  --dur-med: 520ms;
+  --dur-slow: 900ms;
+
+  --tap: 44px;
+}

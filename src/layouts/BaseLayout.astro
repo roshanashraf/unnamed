@@ -1,0 +1,60 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Seo from '../components/Seo.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+
+// Resolve font URL via Vite so preload matches the hashed build asset
+import syneWoff2 from '@fontsource-variable/syne/files/syne-latin-wght-normal.woff2?url';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <Seo title={title} description={description} />
+    <link rel="preload" href={syneWoff2} as="font" type="font/woff2" crossorigin />
+    <ClientRouter />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header site-shell">
+      <a class="site-header__mark" href="/" transition:name="brand">unnamed</a>
+      <nav class="site-header__nav" aria-label="Primary">
+        <a href="/#work">Work</a>
+      </nav>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer site-shell">
+      <p>© {new Date().getFullYear()} unnamed</p>
+      <p>Designed &amp; built as a static Astro site</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    left: var(--space-3);
+    top: var(--space-3);
+    transform: translateY(-200%);
+    background: var(--color-foam);
+    color: var(--color-ink);
+    padding: 0.6rem 1rem;
+    z-index: 100;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    font-family: var(--font-display);
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+</style>

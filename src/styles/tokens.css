@@ -58,6 +58,25 @@
 
   --tap: 44px;
 
+  /* Homepage column, matched to a quiet text page */
+  --color-home: #fafafa;
+  --color-home-ink: #0a0a0a;
+  --color-home-muted: #525252;
+  --color-home-rule: #d4d4d4;
+  --color-home-hover: #f5f5f5;
+  --color-home-plate: #f4f4f4;
+  --font-home: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-home-display: Georgia, 'Iowan Old Style', 'Palatino Linotype', Palatino, serif;
+
+  /* Clarity / case study scale — inspired by long-form project pages like Freeway */
+  --case-title: clamp(3.25rem, 11vw, 5.75rem);
+  --case-section: clamp(1.85rem, 4.6vw, 3.75rem);
+  --case-subhead: clamp(1.35rem, 2.8vw, 2.25rem);
+  --case-lede: clamp(1.0625rem, 1.6vw, 1.25rem);
+  --case-body: clamp(1rem, 1.4vw, 1.0625rem);
+  --case-metric: clamp(2.25rem, 6vw, 3.75rem);
+  --case-gap: clamp(4.5rem, 10vw, 8rem);
+
   --shadow-media: 0 30px 60px -34px rgba(var(--color-ink-rgb), 0.55);
   --shadow-media-soft: 0 30px 60px -34px rgba(var(--color-ink-rgb), 0.35);
   --gradient-plate-after: linear-gradient(165deg, rgba(185, 245, 74, 0.38), transparent 48%);

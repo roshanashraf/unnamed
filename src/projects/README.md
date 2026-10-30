@@ -51,7 +51,7 @@ Use when the story needs bespoke sections, not just paragraphs.
 1. Copy the shape of **Clarity**:
    - Folder: `src/components/projects/clarity/`
    - Composer: `ClarityCaseStudy.astro` (assembles sections)
-   - Reuse blocks from `src/components/case/` (`CaseChapter`, `CaseBand`, `CasePlatePair`, `MetaStrip`, …)
+   - Reuse blocks from `src/components/case/` (`CaseChapter`, `CaseBand`, `CasePlatePair`, `MetaStrip`, `CaseCompanion`, …)
 
 2. Create `src/components/projects/{slug}/` with your composer (e.g. `FareClarityCaseStudy.astro`).
 
@@ -73,6 +73,33 @@ export const projectViews = {
 - `next` (`{ href, title } | null` — “next case study” link)
 
 5. Set `status: published` in the MDX frontmatter when the page is ready.
+
+### Optional — scroll companion (viewport guide)
+
+Reuse the particle mascot from Clarity when the story has several scroll beats.
+
+1. At the top of your composer:
+
+```astro
+import CaseStudyBar from '../../case/CaseStudyBar.astro';
+import CaseCompanion from '../../case/CaseCompanion.astro';
+
+<CaseStudyBar />
+<CaseCompanion defaultLine="First line before scroll, or the hero line." />
+```
+
+`CaseStudyBar` adds a sticky header with a **Guide** dropdown: **Dots** (default particle) or **Roshan** (Figma-style pointer). Choice is saved in `localStorage` as `companion-variant`.
+
+2. On each beat, set **`data-guide`** to the spoken line (first person, one sentence). The companion picks the section closest to the middle of the viewport. The caption shows **only when you hover or focus the mascot** — it stays in the side gutter so it does not sit over the reading column.
+
+```html
+<section data-guide="What I changed and why." data-guide-mode="method">
+```
+
+3. **Anchor presets** (`data-guide-mode`, optional): `hero` · `work` · `method` · `toolkit` · `faq` · `contact`.  
+   If omitted: first section → `hero`, last → `contact`, middle sections cycle `work` / `method` / `toolkit`.
+
+4. Clarity helpers that already wire this: `guideLine` on hero/close sections, `line` (+ optional `guideMode`) on `StoryBeat`.
 
 **Clarity catalog-only MDX:** `src/content/projects/clarity.mdx` has frontmatter only; the page UI lives entirely in components.
 
@@ -101,4 +128,6 @@ export const projectViews = {
 | Slug → custom page | `src/projects/registry.ts` |
 | Default page template | `src/components/ProjectStub.astro` |
 | Shared case-study UI | `src/components/case/` |
+| Scroll companion (mascot + bubble) | `src/components/case/CaseCompanion.astro` |
+| Case study sticky bar + guide switcher | `src/components/case/CaseStudyBar.astro` |
 | One project’s UI | `src/components/projects/{slug}/` |

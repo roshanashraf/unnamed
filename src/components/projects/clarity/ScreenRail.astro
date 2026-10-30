@@ -1,0 +1,73 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Screen {
+  src: ImageMetadata;
+  alt: string;
+  caption: string;
+}
+
+interface Props {
+  screens: Screen[];
+  eager?: boolean;
+}
+
+const { screens, eager = false } = Astro.props;
+---
+
+<div class="screen-rail" tabindex="0" aria-label="Screens for this part of the booking">
+  {
+    screens.map((screen, index) => (
+      <figure class="screen-rail__item">
+        <Image
+          src={screen.src}
+          alt={screen.alt}
+          widths={[360, 560, 720]}
+          sizes="(max-width: 720px) 72vw, 280px"
+          loading={eager && index === 0 ? 'eager' : 'lazy'}
+          class="screen-rail__img"
+        />
+        <figcaption>{screen.caption}</figcaption>
+      </figure>
+    ))
+  }
+</div>
+
+<style>
+  .screen-rail {
+    display: flex;
+    justify-content: flex-start;
+    justify-content: safe center;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    width: min(1040px, calc(100vw - 96px));
+    margin-top: var(--space-5);
+    margin-inline: calc((100% - min(1040px, 100vw - 96px)) / 2);
+    padding-block: 8px 4px;
+  }
+
+  .screen-rail__item {
+    flex: 0 0 min(280px, 72vw);
+    scroll-snap-align: start;
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+
+  .screen-rail__img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    background: var(--color-home);
+    filter: drop-shadow(0 12px 28px #00000029) drop-shadow(0 2px 6px #0000001a);
+  }
+
+  .screen-rail__item figcaption {
+    font-size: var(--case-body);
+    line-height: 1.5;
+    color: var(--color-home-muted);
+    max-width: 28ch;
+  }
+</style>

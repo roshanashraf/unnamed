@@ -12,6 +12,7 @@ const { title, description } = Astro.props;
 const path = Astro.url.pathname;
 const isHome = path === '/';
 const isProject = path.startsWith('/projects');
+const quiet = isHome || isProject;
 
 import bricolageWoff2 from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2?url';
 ---
@@ -23,22 +24,31 @@ import bricolageWoff2 from '@fontsource-variable/bricolage-grotesque/files/brico
     <link rel="preload" href={bricolageWoff2} as="font" type="font/woff2" crossorigin />
     <ClientRouter />
   </head>
-  <body>
+  <body class:list={{ 'page-home': quiet }}>
     <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header">
-      <a class="site-header__mark" href="/" transition:name="brand">unnamed</a>
-      <div class="site-header__right">
-        <a class="site-header__navlink" href="/#work">{isHome ? 'Work' : '← Work'}</a>
-        {isProject && <span class="site-header__pill">Case study</span>}
-      </div>
-    </header>
-    <main id="main">
+    {
+      !quiet && (
+        <header class="site-header">
+          <a class="site-header__mark" href="/" transition:name="brand">
+            unnamed
+          </a>
+          <div class="site-header__right">
+            <a class="site-header__navlink" href="/#work">← Work</a>
+          </div>
+        </header>
+      )
+    }
+    <main id="main" class:list={{ 'home-shell': quiet }}>
       <slot />
     </main>
-    <footer class="site-footer">
-      <p>© {new Date().getFullYear()} unnamed</p>
-      <p>Product design</p>
-    </footer>
+    {
+      !quiet && (
+        <footer class="site-footer">
+          <p>© {new Date().getFullYear()} unnamed</p>
+          <p>Product design</p>
+        </footer>
+      )
+    }
   </body>
 </html>
 

@@ -9,73 +9,36 @@ interface Props {
 }
 
 const { next } = Astro.props;
+const href = next?.href ?? '/#work';
+const title = next?.title ?? 'All work';
+const label = next ? 'Next' : 'Back';
 ---
 
-<nav class="case-next site-shell" aria-label="Continue">
-  {
-    next ? (
-      <a class="case-next__link" href={next.href}>
-        <span class="kicker">Next case study</span>
-        <span class="case-next__title">
-          {next.title}
-          <span aria-hidden="true"> →</span>
-        </span>
-      </a>
-    ) : (
-      <a class="case-next__link" href="/#work">
-        <span class="kicker">All work</span>
-        <span class="case-next__title">
-          Back to the list
-          <span aria-hidden="true"> →</span>
-        </span>
-      </a>
-    )
-  }
+<nav class="case-next story-beat" aria-label="Continue">
+  <p class="case-metric__group-label">{label}</p>
+  <a class="case-next__link" href={href}>
+    <span class="case-subhead">{title}</span>
+  </a>
 </nav>
 
 <style>
   .case-next {
-    margin-top: clamp(70px, 10vw, 140px);
-    padding: clamp(90px, 14vw, 170px) clamp(18px, 5vw, 44px);
-    background: var(--color-night);
-    color: var(--color-on-ink);
-    text-align: center;
-  }
-
-  .case-next :global(.kicker) {
-    justify-content: center;
-    color: rgba(242, 240, 230, 0.45);
-  }
-
-  .case-next :global(.kicker::before) {
-    background: var(--color-yellow);
+    margin-top: var(--case-gap);
   }
 
   .case-next__link {
-    display: inline-grid;
-    justify-items: center;
-    gap: 0.4rem;
+    display: block;
+    margin-inline: -16px;
+    margin-top: var(--space-3);
+    border-radius: 12px;
+    padding: 14px 16px;
     text-decoration: none;
-    min-height: var(--tap);
-    color: inherit;
+    color: var(--color-home-ink);
+    transition: background-color 150ms var(--ease-soft);
   }
 
-  .case-next__title {
-    font-weight: 800;
-    font-size: clamp(1.7rem, 4.6vw, 3rem);
-    letter-spacing: -0.04em;
-    line-height: 1;
-    color: var(--color-on-ink);
-    transition: color 0.3s ease;
-  }
-
-  .case-next__link:hover .case-next__title {
-    color: var(--color-yellow);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .case-next__title {
-      transition: none;
-    }
+  .case-next__link:hover,
+  .case-next__link:focus-visible {
+    background: var(--color-home-hover);
   }
 </style>

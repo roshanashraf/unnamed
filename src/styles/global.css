@@ -61,6 +61,157 @@ body::before {
   padding-inline: clamp(20px, 5vw, 52px);
 }
 
+.home-shell {
+  width: min(100%, 740px);
+  margin-inline: auto;
+  min-height: 100vh;
+  padding: 48px;
+}
+
+.home-heading {
+  font-family: var(--font-home-display);
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: -0.01rem;
+  line-height: 1.5;
+  color: var(--color-home-ink);
+}
+
+.home-rule {
+  width: 48px;
+  height: 1px;
+  margin-block: var(--space-4);
+  border-radius: 1px;
+  background: var(--color-home-rule);
+}
+
+.home-back {
+  color: var(--color-home-muted);
+  text-decoration: none;
+  line-height: 1.625;
+}
+
+.home-back:hover,
+.home-back:focus-visible {
+  color: var(--color-home-ink);
+}
+
+/* Case study typography (long-form project narrative) */
+.case-title {
+  font-family: var(--font-home-display);
+  font-weight: 400;
+  font-size: var(--case-title);
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  color: var(--color-home-ink);
+  text-wrap: balance;
+}
+
+.case-section {
+  font-family: var(--font-home-display);
+  font-weight: 400;
+  font-size: var(--case-section);
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  color: var(--color-home-ink);
+  text-wrap: balance;
+}
+
+.case-subhead {
+  font-family: var(--font-home-display);
+  font-weight: 400;
+  font-size: var(--case-subhead);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--color-home-ink);
+  text-wrap: balance;
+}
+
+.case-lede {
+  font-size: var(--case-lede);
+  line-height: 1.5;
+  color: var(--color-home-ink);
+  max-width: 36ch;
+}
+
+.case-body {
+  font-size: var(--case-body);
+  line-height: 1.65;
+  color: var(--color-home-muted);
+  text-wrap: pretty;
+}
+
+.case-meta {
+  font-size: var(--case-body);
+  line-height: 1.65;
+  color: var(--color-home-muted);
+}
+
+.case-chapter__index {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-family: var(--font-home-display);
+  font-size: clamp(1.75rem, 3.8vw, 2.75rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--color-home-muted);
+}
+
+.case-metric {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.case-metric__value {
+  font-family: var(--font-home-display);
+  font-size: var(--case-metric);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--color-home-ink);
+}
+
+.case-metric__label {
+  font-size: var(--case-body);
+  line-height: 1.5;
+  color: var(--color-home-muted);
+}
+
+.case-metric__group-label {
+  margin-bottom: var(--space-3);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-home-muted);
+}
+
+body.page-home {
+  background: var(--color-home);
+  background-image: none;
+  color: var(--color-home-ink);
+  font-family: var(--font-home);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  overflow-x: clip;
+  --color-ink: var(--color-home-ink);
+}
+
+body.page-home::before {
+  display: none;
+}
+
+body.page-home ::selection {
+  background: #d4d4d4;
+  color: var(--color-home-ink);
+}
+
+html:has(body.page-home) {
+  background: var(--color-home);
+}
+
 .site-header {
   position: fixed;
   top: 0;
@@ -72,6 +223,7 @@ body::before {
   justify-content: space-between;
   gap: 16px;
   padding: 18px clamp(20px, 4vw, 48px);
+  background: var(--color-paper);
 }
 
 .site-header__mark {
@@ -278,6 +430,25 @@ body::before {
   }
 }
 
+@keyframes story-rise {
+  from {
+    opacity: 0;
+    transform: perspective(1200px) translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .story-beat {
+    animation: story-rise linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+}
+
 .motion-rise {
   animation: rise-in var(--dur-slow) var(--ease-out) both;
 }
@@ -298,9 +469,31 @@ body::before {
   animation-delay: 360ms;
 }
 
+@media (min-width: 768px) {
+  .home-shell {
+    padding: 96px;
+  }
+}
+
 @media (max-width: 860px) {
   .out {
     -webkit-text-stroke-width: 1.2px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html:has(body.page-home) {
+    --color-home: #0a0a0a;
+    --color-home-ink: #fafafa;
+    --color-home-muted: #a3a3a3;
+    --color-home-hover: rgb(38 38 38 / 0.5);
+    --color-home-plate: #171717;
+    background: var(--color-home);
+    color-scheme: dark;
+  }
+
+  body.page-home ::selection {
+    background: #404040;
   }
 }
 
@@ -311,6 +504,7 @@ body::before {
 
   .motion-rise,
   .motion-fade,
+  .story-beat,
   .project-list li,
   .eyebrow i,
   .marq__track,

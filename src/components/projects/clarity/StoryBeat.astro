@@ -1,0 +1,110 @@
+---
+import ScreenRail from './ScreenRail.astro';
+import type { ImageMetadata } from 'astro';
+
+interface Screen {
+  src: ImageMetadata;
+  alt: string;
+  caption: string;
+}
+
+interface Metric {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  index: string;
+  title: string;
+  id: string;
+  screens: Screen[];
+  metrics?: Metric[];
+  metricLabel?: string;
+  line: string;
+  /** Optional mascot anchor preset. See CaseCompanion in src/components/case/. */
+  guideMode?: 'hero' | 'work' | 'method' | 'toolkit' | 'faq' | 'contact';
+  eager?: boolean;
+}
+
+const { index, title, id, screens, metrics = [], metricLabel, line, guideMode, eager = false } =
+  Astro.props;
+---
+
+<section
+  class="story-beat"
+  aria-labelledby={id}
+  data-guide={line}
+  data-guide-mode={guideMode}
+>
+  <span class="case-chapter__index" aria-hidden="true">{index}</span>
+  <h2 class="case-section" id={id}>{title}</h2>
+  <div class="story-beat__prose">
+    <slot />
+  </div>
+  <ScreenRail screens={screens} eager={eager} />
+  {
+    metrics.length > 0 && (
+      <div class="story-metrics" aria-label={metricLabel}>
+        {metricLabel && <p class="case-metric__group-label">{metricLabel}</p>}
+        <ul class="story-metrics__list" role="list">
+          {metrics.map((metric) => (
+            <li class="case-metric">
+              <p class="case-metric__value">{metric.value}</p>
+              <p class="case-metric__label">{metric.label}</p>
+            </li>
+          ))}
+        </ul>
+        <slot name="more" />
+      </div>
+    )
+  }
+  <slot name="note" />
+</section>
+
+<style>
+  .story-beat {
+    margin-top: var(--case-gap);
+  }
+
+  .story-beat__prose {
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+    max-width: 42ch;
+  }
+
+  .story-beat__prose :global(p) {
+    font-size: var(--case-body);
+    line-height: 1.65;
+    color: var(--color-home-muted);
+    text-wrap: pretty;
+  }
+
+  .story-metrics {
+    margin-top: var(--space-5);
+    display: grid;
+    gap: var(--space-4);
+    max-width: 42ch;
+  }
+
+  .story-metrics__list {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .story-beat :global(.story-more),
+  .story-beat :global(.story-note) {
+    font-size: var(--case-body);
+    line-height: 1.65;
+    color: var(--color-home-muted);
+  }
+
+  .story-beat :global(.story-more) {
+    margin-top: var(--space-3);
+  }
+
+  .story-beat :global(.story-note) {
+    margin-top: var(--space-4);
+    font-style: italic;
+  }
+</style>

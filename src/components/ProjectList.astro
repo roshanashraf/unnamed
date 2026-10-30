@@ -1,76 +1,491 @@
 ---
 import { getCollection } from 'astro:content';
-import ProjectCard from './ProjectCard.astro';
+import { getImage } from 'astro:assets';
 
 const projects = (await getCollection('projects')).sort(
   (a, b) => a.data.order - b.data.order || b.data.year - a.data.year,
 );
+
+const tilts = [-5, 3.5, -2.5, 5.5, -4, 2, -6, 4, -3, 6, -1.5];
+
+const items = await Promise.all(
+  projects.map(async (project, index) => {
+    const cover = project.data.cover;
+    let image = null;
+
+    if (cover) {
+      const optimized = await getImage({ src: cover, width: 640 });
+      const scale = Math.min(300 / cover.width, 200 / cover.height);
+      image = {
+        src: optimized.src,
+        width: Math.round(cover.width * scale),
+        height: Math.round(cover.height * scale),
+      };
+    }
+
+    return {
+      title: project.data.title,
+      summary: project.data.summary,
+      href: `/projects/${project.id}`,
+      tilt: tilts[index % tilts.length],
+      image,
+    };
+  }),
+);
 ---
 
-<section class="work site-shell" id="work" aria-labelledby="work-heading">
-  <header class="work__header motion-fade">
-    <p class="kicker">( Selected )</p>
-    <h2 id="work-heading" class="work__heading">
-      Selected
-      <span class="out">work.</span>
-    </h2>
-    <p class="work__lede">A published case study, and earlier stories still being written.</p>
-  </header>
+<section class="home-work" id="work" aria-labelledby="work-heading">
+  <h2 id="work-heading" class="home-heading">Projects</h2>
+  <div class="home-rule"></div>
 
-  <ul class="project-list" role="list">
+  <ul class="home-projects" data-arc-list role="list">
     {
-      projects.map((project, index) => (
+      items.map((item, index) => (
         <li>
-          <ProjectCard
-            title={project.data.title}
-            summary={project.data.summary}
-            year={project.data.year}
-            role={project.data.role}
-            tags={project.data.tags}
-            href={`/projects/${project.id}`}
-            status={project.data.status}
-            cover={project.data.cover}
-            index={index}
-          />
+          <a class="home-project" href={item.href} data-arc-index={index}>
+            <span class="home-project__title">{item.title}</span>
+            <span class="home-project__summary">{item.summary}</span>
+          </a>
         </li>
       ))
     }
   </ul>
+
+  <div class="arc-preview" data-arc-preview data-side="above" aria-hidden="true">
+    <div class="arc-preview__layer" data-arc-layer>
+      <div class="arc-preview__swing" data-arc-swing>
+        <div class="arc-preview__stack" data-arc-stack>
+          {
+            items.map((item, index) => (
+              <div class="arc-preview__item" data-arc-item={index} style={`rotate: ${item.tilt}deg`}>
+                {
+                  item.image ? (
+                    <img
+                      class="arc-preview__picture"
+                      src={item.image.src}
+                      alt=""
+                      width={item.image.width}
+                      height={item.image.height}
+                      decoding="async"
+                      loading="lazy"
+                      draggable="false"
+                    />
+                  ) : (
+                    <div class="arc-preview__plate">
+                      <span>{item.title}</span>
+                    </div>
+                  )
+                }
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
+<script>
+  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function mountArcList() {
+    const list = document.querySelector('[data-arc-list]');
+    const preview = document.querySelector('[data-arc-preview]');
+    if (!list || !preview) return () => {};
+
+    const layer = preview.querySelector('[data-arc-layer]');
+    const swing = preview.querySelector('[data-arc-swing]');
+    const stack = preview.querySelector('[data-arc-stack]');
+    const cards = [...preview.querySelectorAll('[data-arc-item]')];
+    if (!layer || !swing || !stack) return () => {};
+
+    const follow = {
+      toX: 0,
+      toY: 0,
+      fromX: 0,
+      fromY: 0,
+      pace: 0,
+      x: 0,
+      y: 0,
+      angle: 0,
+      spin: 0,
+      hang: -1,
+    };
+    const cursorOffset = { x: 0, y: 0 };
+    let layerPose = null;
+    let side = 1;
+    let mode = 'closed';
+    let reduced = motionQuery.matches;
+    let followFrame = 0;
+    let arcStop = () => {};
+    let dismissBound = false;
+
+    function applyFollow() {
+      preview.style.transform = `translate3d(${follow.x}px, ${follow.y}px, 0)`;
+      swing.style.rotate = `${follow.angle}deg`;
+    }
+
+    function paintLayer(x, y, rotation) {
+      layerPose = { x, y, rotation };
+      layer.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${rotation}deg)`;
+    }
+
+    function stopFollow() {
+      cancelAnimationFrame(followFrame);
+      followFrame = 0;
+    }
+
+    function stepFollow(now) {
+      const previous = stepFollow.last || now;
+      const dt = Math.min(1 / 30, (now - previous) / 1000);
+      stepFollow.last = now;
+      const speed = dt > 0 ? Math.hypot(follow.toX - follow.fromX, follow.toY - follow.fromY) / dt : 0;
+      follow.fromX = follow.toX;
+      follow.fromY = follow.toY;
+      follow.pace += (speed - follow.pace) * (1 - Math.exp(-12 * dt));
+      const gain = 1 - Math.exp(-(50 - 42 * Math.min(1, follow.pace / 2000)) * dt);
+      const dx = (follow.toX - follow.x) * gain;
+      follow.x += dx;
+      follow.y += (follow.toY - follow.y) * gain;
+      const tilt = Math.max(-14, Math.min(14, follow.hang * (dt > 0 ? dx / dt : 0) * 0.012));
+      follow.spin += (320 * (tilt - follow.angle) - 16 * follow.spin) * dt;
+      follow.angle += follow.spin * dt;
+      const settledFollow =
+        Math.abs(follow.toX - follow.x) + Math.abs(follow.toY - follow.y) < 0.1 &&
+        Math.abs(follow.angle) + Math.abs(follow.spin) < 0.01;
+      if (settledFollow) {
+        follow.x = follow.toX;
+        follow.y = follow.toY;
+        follow.pace = 0;
+        follow.angle = 0;
+        follow.spin = 0;
+      }
+      applyFollow();
+      followFrame = settledFollow ? 0 : requestAnimationFrame(stepFollow);
+    }
+
+    function startFollow() {
+      if (followFrame || reduced) return;
+      stepFollow.last = performance.now();
+      followFrame = requestAnimationFrame(stepFollow);
+    }
+
+    function place(box, clientX, clientY) {
+      const above = box.top >= 238;
+      const x = Math.max(24, Math.min(window.innerWidth - 300 - 24, clientX - 150));
+      const y = Math.max(
+        24,
+        Math.min(window.innerHeight - 200 - 24, above ? clientY - box.height / 2 - 200 - 14 : clientY + box.height / 2 + 14),
+      );
+      preview.dataset.side = above ? 'above' : 'below';
+      swing.style.transformOrigin = `${clientX - x}px ${clientY - y}px`;
+      cursorOffset.x = clientX - x - 150;
+      cursorOffset.y = clientY - y - 100;
+      follow.toX = x;
+      follow.toY = y;
+      follow.hang = above ? -1 : 1;
+      if (!layerPose || reduced) {
+        stopFollow();
+        follow.x = x;
+        follow.y = y;
+        follow.fromX = x;
+        follow.fromY = y;
+        follow.pace = 0;
+        follow.angle = 0;
+        follow.spin = 0;
+        applyFollow();
+      }
+      if (!reduced) startFollow();
+    }
+
+    function activate(index) {
+      cards.forEach((card, cardIndex) => {
+        card.classList.toggle('is-active', cardIndex === index);
+      });
+    }
+
+    function play(from, to, opening, done) {
+      arcStop();
+      const lift = Math.min(32, Math.max(0, preview.getBoundingClientRect().top - 12));
+      const arcSide = side;
+      let value = 0;
+      let velocity = 0;
+      let last = 0;
+      let frame = 0;
+      const stiffness = 340;
+      const damping = 22;
+
+      function tick(now) {
+        const dt = Math.min(1 / 30, last ? (now - last) / 1000 : 1 / 60);
+        last = now;
+        velocity += (1 - value) * stiffness * dt;
+        velocity *= Math.exp(-damping * dt);
+        value += velocity * dt;
+        const arc = Math.sin(value * Math.PI);
+        paintLayer(
+          from.x + (to.x - from.x) * value + arc * -72 * arcSide,
+          from.y + (to.y - from.y) * value - arc * lift,
+          from.rotation + (to.rotation - from.rotation) * value,
+        );
+        stack.style.opacity = String(Math.min(1, Math.max(0, opening ? value : 1 - value)));
+        stack.style.scale = String(Math.max(0, opening ? 0.1 + 0.9 * value : 1 - 0.9 * value));
+        if (Math.abs(1 - value) < 0.008 && Math.abs(velocity) < 0.04) {
+          paintLayer(to.x, to.y, to.rotation);
+          stack.style.opacity = opening ? '1' : '0';
+          stack.style.scale = opening ? '1' : '0.1';
+          frame = 0;
+          done?.();
+          return;
+        }
+        frame = requestAnimationFrame(tick);
+      }
+
+      frame = requestAnimationFrame(tick);
+      arcStop = () => cancelAnimationFrame(frame);
+    }
+
+    function show(index) {
+      activate(index);
+      if (mode === 'open') return;
+      const from = layerPose ?? { x: cursorOffset.x, y: cursorOffset.y, rotation: -8 * side };
+      mode = 'open';
+      preview.classList.remove('is-settled');
+      bindDismiss();
+      if (reduced) {
+        paintLayer(0, 0, 0);
+        stack.style.opacity = '1';
+        stack.style.scale = '1';
+        return;
+      }
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (mode === 'open') preview.classList.add('is-settled');
+        });
+      });
+      play(from, { x: 0, y: 0, rotation: 0 }, true);
+    }
+
+    function hide() {
+      if (mode !== 'open') return;
+      mode = 'leaving';
+      preview.classList.remove('is-settled');
+      unbindDismiss();
+      if (reduced) {
+        stack.style.opacity = '0';
+        mode = 'closed';
+        layerPose = null;
+        return;
+      }
+      const from = layerPose ?? { x: 0, y: 0, rotation: 0 };
+      play(from, { x: cursorOffset.x, y: cursorOffset.y, rotation: -8 * side }, false, () => {
+        mode = 'closed';
+        layerPose = null;
+      });
+    }
+
+    function onKey(event) {
+      if (event.key === 'Escape') hide();
+    }
+
+    function bindDismiss() {
+      if (dismissBound) return;
+      dismissBound = true;
+      window.addEventListener('scroll', hide, { capture: true, passive: true });
+      window.addEventListener('resize', hide);
+      window.addEventListener('blur', hide);
+      window.addEventListener('keydown', onKey);
+    }
+
+    function unbindDismiss() {
+      if (!dismissBound) return;
+      dismissBound = false;
+      window.removeEventListener('scroll', hide, true);
+      window.removeEventListener('resize', hide);
+      window.removeEventListener('blur', hide);
+      window.removeEventListener('keydown', onKey);
+    }
+
+    function onPointer(event) {
+      if (event.pointerType === 'touch') return;
+      const row = event.target.closest('[data-arc-index]');
+      if (!row || !list.contains(row)) return;
+      const box = row.getBoundingClientRect();
+      side = event.clientX < box.left + box.width / 2 ? 1 : -1;
+      place(box, event.clientX, event.clientY);
+      show(Number(row.dataset.arcIndex));
+    }
+
+    function onLeave(event) {
+      const box = list.getBoundingClientRect();
+      side = event.clientX < box.left + box.width / 2 ? 1 : -1;
+      hide();
+    }
+
+    function onFocusIn(event) {
+      const row = event.target.closest('[data-arc-index]');
+      if (!row || !row.matches(':focus-visible')) return;
+      const box = row.getBoundingClientRect();
+      side = 1;
+      place(box, box.left + box.width / 2, box.top + box.height / 2);
+      show(Number(row.dataset.arcIndex));
+    }
+
+    function onFocusOut(event) {
+      if (list.contains(event.relatedTarget)) return;
+      hide();
+    }
+
+    function onMotionChange() {
+      reduced = motionQuery.matches;
+    }
+
+    list.addEventListener('pointermove', onPointer);
+    list.addEventListener('pointerleave', onLeave);
+    list.addEventListener('pointercancel', hide);
+    list.addEventListener('focusin', onFocusIn);
+    list.addEventListener('focusout', onFocusOut);
+    motionQuery.addEventListener('change', onMotionChange);
+
+    return () => {
+      arcStop();
+      stopFollow();
+      unbindDismiss();
+      list.removeEventListener('pointermove', onPointer);
+      list.removeEventListener('pointerleave', onLeave);
+      list.removeEventListener('pointercancel', hide);
+      list.removeEventListener('focusin', onFocusIn);
+      list.removeEventListener('focusout', onFocusOut);
+      motionQuery.removeEventListener('change', onMotionChange);
+    };
+  }
+
+  let unmount = () => {};
+
+  function boot() {
+    unmount();
+    unmount = mountArcList();
+  }
+
+  document.addEventListener('astro:page-load', boot);
+  document.addEventListener('astro:before-swap', () => unmount());
+  boot();
+</script>
+
 <style>
-  .work {
-    padding-block: clamp(70px, 10vw, 150px);
+  .home-work {
+    margin-top: 72px;
   }
 
-  .work__header {
+  .home-projects {
+    margin-inline: -16px;
+  }
+
+  .home-project {
+    display: block;
+    border-radius: 12px;
+    padding: 14px 16px;
+    line-height: 1.625;
+    text-decoration: none;
+    color: var(--color-home-ink);
+    transition: background-color 150ms var(--ease-soft);
+  }
+
+  .home-project:hover,
+  .home-project:focus-visible {
+    background: var(--color-home-hover);
+  }
+
+  .home-project__title,
+  .home-project__summary {
+    display: block;
+  }
+
+  .home-project__summary {
+    color: var(--color-home-muted);
+  }
+
+  .arc-preview {
+    z-index: 30;
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 200px;
+  }
+
+  .arc-preview__layer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+
+  .arc-preview__swing {
+    translate: -50% -50%;
+  }
+
+  .arc-preview__stack {
     display: grid;
-    gap: var(--space-3);
-    margin-bottom: clamp(40px, 6vw, 70px);
-    max-width: 18ch;
+    place-items: end center;
+    width: 300px;
+    height: 200px;
+    opacity: 0;
+    scale: 0.1;
   }
 
-  .work__heading {
-    font-weight: 800;
-    font-size: var(--type-title);
-    letter-spacing: -0.04em;
-    line-height: 1.02;
+  .arc-preview[data-side='below'] .arc-preview__stack {
+    place-items: start center;
+  }
+
+  .arc-preview__item {
+    grid-area: 1 / 1;
+    opacity: 0;
+    scale: 0.5;
+  }
+
+  .arc-preview__item.is-active {
+    opacity: 1;
+    scale: 1;
+  }
+
+  .arc-preview.is-settled .arc-preview__item {
+    transition: opacity 200ms var(--ease-soft), scale 200ms var(--ease-soft);
+  }
+
+  .arc-preview__picture,
+  .arc-preview__plate {
+    border-radius: 8px;
+    user-select: none;
+    max-width: none;
+    filter: drop-shadow(0 12px 28px #00000029) drop-shadow(0 2px 6px #0000001a);
+  }
+
+  .arc-preview__plate {
+    width: 300px;
+    height: 188px;
     display: grid;
+    align-items: end;
+    padding: 16px;
+    background: var(--color-home-plate);
+    color: var(--color-home-ink);
+    font-family: var(--font-home-display);
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
   }
 
-  .work__lede {
-    color: var(--color-body);
-    max-width: 36ch;
-    font-weight: 500;
+  @media (prefers-color-scheme: dark) {
+    .arc-preview__picture,
+    .arc-preview__plate {
+      filter: drop-shadow(0 14px 32px #00000080) drop-shadow(0 2px 8px #0000004d);
+    }
   }
 
-  .project-list {
-    display: grid;
-    gap: var(--space-6);
-  }
-
-  .project-list li {
-    padding-top: var(--space-5);
-    border-top: 1px solid var(--color-line);
+  @media (prefers-reduced-motion: reduce) {
+    .arc-preview__item,
+    .arc-preview.is-settled .arc-preview__item {
+      scale: 1;
+      transition: none;
+    }
   }
 </style>

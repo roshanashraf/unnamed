@@ -12,7 +12,7 @@ Put each new file in the folder that matches its job. Do not add extra layers fo
 | `src/pages/` | A URL. Pick `BaseLayout`, load content, place components. No long page design here. |
 | `src/layouts/` | The frame on every page: header, footer, `<Seo>`, global CSS import. |
 | `src/components/` | Site-wide pieces: `Hero`, `ProjectCard`, `ProjectStub`, `Marquee`. |
-| `src/components/case/` | Reusable case-study blocks: `CaseChapter`, `CaseBand`, `CasePlatePair`, `MetaStrip`. |
+| `src/components/case/` | Reusable case-study blocks: `CaseChapter`, `CaseBand`, `CasePlatePair`, `MetaStrip`, `CaseCompanion`. |
 | `src/components/projects/{slug}/` | One custom case study per folder (composer + sections for that project only). |
 | `src/projects/registry.ts` | Maps content slug → case-study component. Add one import + one line per bespoke project. |
 | `src/content/projects/` | Catalog frontmatter (title, year, role, cover, order, status, seo). Body optional for simple MDX stories. |

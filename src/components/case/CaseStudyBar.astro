@@ -1,0 +1,125 @@
+<header class="case-study-bar">
+  <a class="home-back" href="/#work">Work</a>
+  <div class="case-study-bar__right">
+    <label class="case-study-bar__switch">
+      <span class="case-study-bar__label">Guide</span>
+      <select data-companion-variant aria-label="Companion style">
+        <option value="dots">Dots</option>
+        <option value="roshan">Roshan</option>
+      </select>
+    </label>
+  </div>
+</header>
+
+<script>
+  const STORAGE_KEY = 'companion-variant';
+  const DEFAULT = 'dots';
+
+  function readVariant() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved === 'dots' || saved === 'roshan') return saved;
+    } catch (e) {
+      /* ignore */
+    }
+    return DEFAULT;
+  }
+
+  function applyVariant(value) {
+    const next = value === 'roshan' ? 'roshan' : 'dots';
+    document.documentElement.dataset.companionVariant = next;
+    window.dispatchEvent(new CustomEvent('companion-variant', { detail: next }));
+  }
+
+  function syncSelect() {
+    const select = document.querySelector('[data-companion-variant]');
+    if (!select) return;
+    const current = readVariant();
+    if (select.value !== current) select.value = current;
+    applyVariant(current);
+  }
+
+  function onSelectChange(event) {
+    const target = event.target;
+    if (!(target instanceof HTMLSelectElement)) return;
+    if (!target.matches('[data-companion-variant]')) return;
+
+    const value = target.value === 'roshan' ? 'roshan' : 'dots';
+    try {
+      localStorage.setItem(STORAGE_KEY, value);
+    } catch (e) {
+      /* ignore */
+    }
+    applyVariant(value);
+  }
+
+  let selectListenerInstalled = false;
+
+  function boot() {
+    if (!selectListenerInstalled) {
+      document.addEventListener('change', onSelectChange);
+      selectListenerInstalled = true;
+    }
+    syncSelect();
+  }
+
+  document.addEventListener('astro:page-load', boot);
+  boot();
+</script>
+
+<style>
+  .case-study-bar {
+    position: sticky;
+    top: 0;
+    z-index: 85;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: 14px clamp(20px, 5vw, 52px);
+    background: color-mix(in srgb, var(--color-home) 92%, transparent);
+    border-bottom: 1px solid var(--color-home-rule);
+    backdrop-filter: blur(8px);
+  }
+
+  .case-study-bar__right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .case-study-bar__switch {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 13px;
+    color: var(--color-home-muted);
+  }
+
+  .case-study-bar__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .case-study-bar__switch select {
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-home-ink);
+    border: 1px solid var(--color-home-rule);
+    border-radius: 6px;
+    padding: 0.35rem 1.75rem 0.35rem 0.55rem;
+    background: var(--color-home)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath stroke='%23525252' stroke-width='1.2' d='m1 1 4 4 4-4'/%3E%3C/svg%3E")
+      no-repeat right 0.45rem center;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .case-study-bar__switch select:focus-visible {
+    outline: 2px solid var(--color-deep);
+    outline-offset: 2px;
+  }
+</style>

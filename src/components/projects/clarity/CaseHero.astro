@@ -1,126 +1,29 @@
 ---
-import MetaStrip from '../../case/MetaStrip.astro';
-
 interface Props {
   year: number;
   role: string;
+  guideLine: string;
 }
 
-const { year, role } = Astro.props;
-
-const meta = [
-  { label: 'Product', value: 'Outstation cabs' },
-  { label: 'Where', value: 'MakeMyTrip' },
-  { label: 'Role', value: role },
-  { label: 'Year', value: String(year) },
-];
+const { year, role, guideLine } = Astro.props;
 ---
 
-<header class="case-hero">
-  <div class="case-hero__center">
-    <p class="eyebrow motion-rise"><i></i>Case study · Outstation cabs</p>
-    <h1 class="case-hero__title motion-rise motion-delay-1" transition:name="title-clarity">
-      <span class="case-hero__name">Clarity</span>
-      <span class="case-hero__line">Make every booking</span>
-      <span class="case-hero__outline out">self-explanatory.</span>
-    </h1>
-    <p class="case-hero__dek motion-rise motion-delay-2">
-      Clear trip type, route, price, inclusions, and policies — across every touchpoint.
-    </p>
-    <p class="case-hero__links motion-rise motion-delay-3">
-      <a class="btn btn--ink" href="/#work">All work</a>
-    </p>
-  </div>
-  <MetaStrip items={meta} />
+<header class="case-hero" data-guide={guideLine} data-guide-mode="hero">
+  <h1 class="case-title">Clarity</h1>
+  <p class="case-lede">Make every booking self-explanatory.</p>
+  <p class="case-body">
+    Clear trip type, route, price, inclusions, and policies — across every touchpoint.
+  </p>
+  <p class="case-meta">Outstation cabs · MakeMyTrip · {role} · {year}</p>
 </header>
 
 <style>
   .case-hero {
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding-top: 90px;
-    text-align: center;
-  }
-
-  .case-hero__center {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-4);
-    padding: 0 clamp(18px, 4vw, 44px);
-    min-width: 0;
-  }
-
-  .case-hero__center > * {
-    min-width: 0;
-    max-width: 100%;
-  }
-
-  .case-hero__title {
     display: grid;
-    justify-items: center;
-    gap: 0.08em;
+    gap: var(--space-4);
   }
 
-  .case-hero__name {
-    font-weight: 800;
-    font-size: clamp(4.4rem, 16vw, 12.5rem);
-    line-height: 0.82;
-    letter-spacing: -0.045em;
-  }
-
-  .case-hero__line,
-  .case-hero__outline {
-    display: block;
-    font-weight: 800;
-    font-size: clamp(2.1rem, 5vw, 3.7rem);
-    line-height: 1.02;
-    letter-spacing: -0.04em;
-    max-width: 22ch;
-  }
-
-  .case-hero__line {
-    margin-top: 0.28em;
-  }
-
-  .case-hero__dek {
-    max-width: 42ch;
-    font-size: var(--type-hero);
-    font-weight: 500;
-    line-height: 1.5;
-    color: var(--color-body);
-  }
-
-  .case-hero__links {
-    display: flex;
-    justify-content: center;
-  }
-
-  @media (max-width: 860px) {
-    .case-hero__outline {
-      -webkit-text-stroke-width: 1.2px;
-    }
-  }
-
-  @media (max-width: 719px) {
-    .case-hero__name {
-      font-size: clamp(3.6rem, 18vw, 5.2rem);
-    }
-
-    .case-hero__line,
-    .case-hero__outline {
-      font-size: clamp(1.7rem, 8vw, 2.3rem);
-      max-width: 100%;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .case-hero__links a {
-      transition: none;
-    }
+  .case-lede {
+    margin-top: var(--space-2);
   }
 </style>

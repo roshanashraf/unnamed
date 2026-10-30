@@ -1,12 +1,23 @@
 ---
-import Prose from '../../Prose.astro';
+import CaseCompanion from '../../case/CaseCompanion.astro';
+import CaseStudyBar from '../../case/CaseStudyBar.astro';
 import CaseHero from './CaseHero.astro';
-import CaseBrief from './CaseBrief.astro';
-import CaseChapter from '../../case/CaseChapter.astro';
-import CasePlatePair from '../../case/CasePlatePair.astro';
-import CaseBand from '../../case/CaseBand.astro';
+import StoryBeat from './StoryBeat.astro';
 import CaseNamed from './CaseNamed.astro';
 import CaseNext from './CaseNext.astro';
+
+import tripBefore from '../../../assets/projects/clarity/trip-before.png';
+import tripAfter from '../../../assets/projects/clarity/trip-after.png';
+import routeBefore from '../../../assets/projects/clarity/route-before.png';
+import routeAfter from '../../../assets/projects/clarity/route-after.png';
+import pricePolicies from '../../../assets/projects/clarity/price-policies.png';
+import sightseeingReview from '../../../assets/projects/clarity/sightseeing-review.png';
+import luggageCabs from '../../../assets/projects/clarity/luggage-cabs.png';
+import luggageInputs from '../../../assets/projects/clarity/luggage-inputs.png';
+import luggageFit from '../../../assets/projects/clarity/luggage-fit.png';
+import airportListing from '../../../assets/projects/clarity/airport-listing.png';
+import airportReview from '../../../assets/projects/clarity/airport-review.png';
+import airportTracked from '../../../assets/projects/clarity/airport-tracked.png';
 
 interface NextProject {
   href: string;
@@ -23,293 +34,227 @@ const { year, role, next } = Astro.props;
 ---
 
 <article class="case">
-  <CaseHero year={year} role={role} />
-  <CaseBrief />
+  <CaseStudyBar />
+  <CaseCompanion defaultLine="The fare was on screen. The trip was not." />
+  <CaseHero
+    year={year}
+    role={role}
+    guideLine="The fare was on screen. The trip was not."
+  />
 
-  <CaseChapter index="01" label="Trip type" title="One-way versus round trip." id="trip-type">
-    <Prose wide>
-      <p>People could not tell what a round trip was promising.</p>
-      <p>
-        Does it mean drop now, and a pickup later on the return day? Or does the cab stay for the whole
-        trip?
-      </p>
-    </Prose>
-    <CasePlatePair>
-      <figure class="plate">
-        <figcaption>Before</figcaption>
-        <ul role="list">
-          <li>What does round trip mean?</li>
-          <li>Do I get to keep the car with me?</li>
-          <li>Will I be picked up in a different car?</li>
-        </ul>
-      </figure>
-      <figure class="plate plate--after">
-        <figcaption>After</figcaption>
-        <ul class="choices" role="list">
-          <li>Get dropped off</li>
-          <li>Keep the cab till return</li>
-        </ul>
-        <p class="plate__note">Stops can be added on the same search.</p>
-      </figure>
-    </CasePlatePair>
-    <CaseBand slot="band" label="Over one year · outstation">
-      <ul class="metrics metrics--lead" role="list">
-        <li>
-          <span class="metrics__value">54%</span>
-          <span class="metrics__label">Overall round-trip increase</span>
-        </li>
-        <li>
-          <span class="metrics__value">8%</span>
-          <span class="metrics__label">Round-trip share</span>
-        </li>
-      </ul>
-      <ul class="metrics metrics--sub" role="list">
-        <li>
-          <span class="metrics__value">82%</span>
-          <span class="metrics__label">Multicity, year on year</span>
-        </li>
-        <li>
-          <span class="metrics__value">39%</span>
-          <span class="metrics__label">One-way, year on year</span>
-        </li>
-        <li>
-          <span class="metrics__value">28%</span>
-          <span class="metrics__label">Multicity share</span>
-        </li>
-        <li>
-          <span class="metrics__value">−3%</span>
-          <span class="metrics__label">One-way share</span>
-        </li>
-      </ul>
-    </CaseBand>
-  </CaseChapter>
+  <section
+    class="story-beat case-open"
+    aria-labelledby="case-open"
+    data-guide="Six decisions were left to be guessed. I took them in that order."
+    data-guide-mode="work"
+  >
+    <h2 class="case-section" id="case-open">The fare was visible. The trip was not.</h2>
+    <p class="case-body">
+      An outstation cab booking showed a price and left the shape of the trip to be guessed. Round
+      trip, the road, what the fare included, sightseeing, the bags, and an airport pickup each hid a
+      decision. The six parts below follow that order. Each one opens with the friction, then the
+      screen that carries the change.
+    </p>
+  </section>
 
-  <CaseChapter index="02" label="Route" title="Which route am I paying for?" id="route">
-    <Prose wide>
-      <p>
-        Without the route, pickup and drop were a fare — and then an argument. There was no clarity
-        about the road being paid for, and that turned into on-ground conflicts with the driver.
-      </p>
-      <p class="signal">
-        <span class="signal__value">10%</span>
-        <span>of overall submit NPS feedback</span>
-      </p>
-    </Prose>
-    <CasePlatePair>
-      <figure class="plate">
-        <figcaption>Before</figcaption>
-        <p class="plate__lead">
-          No clarity about the route being paid for — and then a conflict with the driver.
-        </p>
-      </figure>
-      <figure class="plate plate--after">
-        <figcaption>After</figcaption>
-        <ul class="choices" role="list">
-          <li>Pickup and drop</li>
-          <li>Distance and time</li>
-          <li>The route options</li>
-          <li>The road being taken, including the expressway</li>
-        </ul>
-      </figure>
-    </CasePlatePair>
-    <div class="idle">
-      <p class="idle__kicker">Readout</p>
-      <p class="idle__title">Not live.</p>
-      <p class="idle__copy">No data yet.</p>
-    </div>
-  </CaseChapter>
+  <StoryBeat
+    index="01"
+    id="trip-type"
+    title="One-way versus round trip."
+    line="Round trip never said whether the cab stayed. I named what happens."
+    eager
+    metricLabel="Over one year · outstation"
+    screens={[
+      {
+        src: tripBefore,
+        alt: 'Cab search with One Way and Round Trip as unlabeled radio options.',
+        caption: 'Round trip was a label. It did not say whether the cab stayed.',
+      },
+      {
+        src: tripAfter,
+        alt: 'Search with One-way, Get dropped off, and Round-trip, Keep cab till return.',
+        caption: 'The choice now says what happens: dropped off, or the cab stays until return.',
+      },
+    ]}
+    metrics={[
+      { value: '54%', label: 'Overall round-trip increase' },
+      { value: '8%', label: 'Round-trip share' },
+    ]}
+  >
+    <p>People could not tell what a round trip was promising.</p>
+    <p>
+      Does it mean drop now, and a pickup later on the return day? Or does the cab stay for the whole
+      trip?
+    </p>
+    <p slot="more" class="story-more">
+      Alongside that, multicity was up 82% year on year and one-way 39%. Multicity’s share was 28%.
+      One-way’s share was down 3%.
+    </p>
+  </StoryBeat>
 
-  <CaseChapter index="03" label="Price" title="What am I paying for?" id="price">
-    <Prose wide>
-      <p>
-        Price shock is a review problem: the fare is on screen, and the reason for it is not. The new
-        review names the trip, then the rules that apply to it.
-      </p>
-    </Prose>
-    <ol class="moves" role="list">
-      <li>
-        <span>Highlights</span>
-        <p>A trip highlights section, so the shape of the ride is visible before the fare is debated.</p>
-      </li>
-      <li>
-        <span>Policies</span>
-        <p>The policies block, redesigned.</p>
-      </li>
-      <li>
-        <span>Each way</span>
-        <p>One-way policies and round-trip policies, written apart.</p>
-      </li>
-    </ol>
-    <CaseBand slot="band" label="Info clarity">
-      <ul class="metrics metrics--lead" role="list">
-        <li>
-          <span class="metrics__value">6%</span>
-          <span class="metrics__label">Conversion increase from review</span>
-        </li>
-        <li>
-          <span class="metrics__value">10%</span>
-          <span class="metrics__label">Fewer calls about policies and on-ground issues</span>
-        </li>
-      </ul>
-    </CaseBand>
-  </CaseChapter>
+  <StoryBeat
+    index="02"
+    id="route"
+    title="Which route am I paying for?"
+    line="The fare did not name the road. That was turning into arguments with the driver."
+    screens={[
+      {
+        src: routeBefore,
+        alt: 'Cab list that states 145 km and about 2.5 hours, with no road named.',
+        caption: 'Distance and time, and no road. The fare did not say which way the cab would go.',
+      },
+      {
+        src: routeAfter,
+        alt: 'The same cab list with Via Fastest Route, Expressway Road, and a link to other routes.',
+        caption: 'The list names the road, including the expressway, and offers the other routes.',
+      },
+    ]}
+  >
+    <p>
+      Without the route, pickup and drop were a fare — and then an argument. There was no clarity
+      about the road being paid for, and that turned into on-ground conflicts with the driver.
+    </p>
+    <p>That theme was 10% of overall submit NPS feedback.</p>
+    <p slot="note" class="story-note">Not live. No data yet.</p>
+  </StoryBeat>
 
-  <CaseChapter index="04" label="Sightseeing" title="Sightseeing, in the fare or on top of it." id="sightseeing">
-    <Prose wide>
-      <p>
-        Sightseeing follows what supply sent. When the fare jumps, the policies that explain it sit on
-        the same screen.
-      </p>
-    </Prose>
-    <figure class="jump">
-      <p class="jump__sum"><span>₹3,128</span> <span class="jump__op">+</span> <span>₹950</span></p>
-      <p class="jump__total">₹4,078</p>
-      <figcaption>The price jump, with the policies that explain it.</figcaption>
-    </figure>
-    <CasePlatePair>
-      <figure class="plate plate--after">
-        <figcaption>Low buffer</figcaption>
-        <p class="plate__lead">When supply leaves very little buffer, the extra distance is an add-on.</p>
-      </figure>
-      <figure class="plate plate--after">
-        <figcaption>Already in the fare</figcaption>
-        <p class="plate__lead">
-          When the extra kilometres are part of the base price, suggested spots get more room — so the
-          sightseeing reads as included.
-        </p>
-      </figure>
-    </CasePlatePair>
-    <CaseBand slot="band" label="Once sightseeing is shown">
-      <ul class="metrics metrics--lead" role="list">
-        <li>
-          <span class="metrics__value">3%</span>
-          <span class="metrics__label">KM top-up attach, when shown</span>
-        </li>
-        <li>
-          <span class="metrics__value">4 pp</span>
-          <span class="metrics__label">Overall conversion increase</span>
-        </li>
-      </ul>
-    </CaseBand>
-  </CaseChapter>
+  <StoryBeat
+    index="03"
+    id="price"
+    title="What am I paying for?"
+    line="I put what the fare includes on the review, before price is the only thing left."
+    metricLabel="Info clarity"
+    screens={[
+      {
+        src: pricePolicies,
+        alt: 'Review screen listing included kilometres, tolls, driver allowance, waiting time, and fuel.',
+        caption: 'The review names the inclusions before the fare is the only thing left to debate.',
+      },
+    ]}
+    metrics={[
+      { value: '6%', label: 'Conversion increase from review' },
+      { value: '10%', label: 'Fewer calls about policies and on-ground issues' },
+    ]}
+  >
+    <p>
+      Price shock is a review problem: the fare is on screen, and the reason for it is not. The review
+      now leads with the shape of the ride, then the rules that apply to it — one-way policies and
+      round-trip policies written apart.
+    </p>
+  </StoryBeat>
 
-  <CaseChapter index="05" label="Luggage" title="Price had become the only decision." id="luggage">
-    <Prose wide>
-      <p>
-        On the cab selection screen, each option showed the usual basics: price, car type, fuel type,
-        kilometres, and seats. Nothing said whether the car could take the people and the bags.
-      </p>
-    </Prose>
-    <ol class="moves" role="list">
-      <li>
-        <span>Inputs</span>
-        <p>
-          Travellers and bags are collected up front. New for a cab booking, and familiar from flights
-          and hotels on MakeMyTrip.
-        </p>
-      </li>
-      <li>
-        <span>The car</span>
-        <p>Vehicle images updated, so the option reads more honestly.</p>
-      </li>
-      <li>
-        <span>Best fit</span>
-        <p>One best-fit option is recommended. Other cabs can add a roof carrier when that is what fits.</p>
-      </li>
-      <li>
-        <span>Review</span>
-        <p>Reassurance about fitment follows onto the review, in an explainer sheet.</p>
-      </li>
-    </ol>
-    <CaseBand slot="band" label="Luggage">
-      <ul class="metrics metrics--lead" role="list">
-        <li>
-          <span class="metrics__value">4%</span>
-          <span class="metrics__label">Increase in conversion</span>
-        </li>
-        <li>
-          <span class="metrics__value">26%</span>
-          <span class="metrics__label">Collection rate of luggage and passenger info</span>
-        </li>
-      </ul>
-      <div class="split-read">
-        <p class="split-read__kicker">Best fit shown in search</p>
-        <ul class="metrics metrics--sub" role="list">
-          <li>
-            <span class="metrics__value">95%</span>
-            <span class="metrics__label">Overall</span>
-          </li>
-          <li>
-            <span class="metrics__value">80%</span>
-            <span class="metrics__label">Searches for 4–6 passengers</span>
-          </li>
-        </ul>
-        <p class="split-read__kicker">Clicks on best-fit cabs, compared with the rest</p>
-        <ul class="metrics metrics--sub" role="list">
-          <li>
-            <span class="metrics__value">95%</span>
-            <span class="metrics__label">Overall</span>
-          </li>
-          <li>
-            <span class="metrics__value">93%</span>
-            <span class="metrics__label">Searches for 4–6 passengers</span>
-          </li>
-        </ul>
-      </div>
-    </CaseBand>
-  </CaseChapter>
+  <StoryBeat
+    index="04"
+    id="sightseeing"
+    title="Sightseeing, in the fare or on top of it."
+    line="When the fare jumps, I keep the reason on the same screen."
+    metricLabel="Once sightseeing is shown"
+    screens={[
+      {
+        src: sightseeingReview,
+        alt: 'Review for Ooty to Mysore to Ooty, with inclusions above a full pay of 4,078 rupees.',
+        caption: 'The fare can jump — here to ₹4,078 — with the inclusions still on the same review.',
+      },
+    ]}
+    metrics={[
+      { value: '3%', label: 'KM top-up attach, when shown' },
+      { value: '4 pp', label: 'Overall conversion increase' },
+    ]}
+  >
+    <p>Sightseeing follows what supply sent. When the fare jumps, the policies that explain it stay on the same screen.</p>
+    <p>
+      When supply leaves very little buffer, the extra distance is an add-on. When those kilometres are
+      already in the base price, suggested spots get more room, so the sightseeing reads as included.
+    </p>
+  </StoryBeat>
 
-  <CaseChapter index="06" label="Airport" title="Cancelled before pickup." id="airport">
-    <Prose wide>
-      <p>
-        Of airport pickup bookings, 20% went unfulfilled. Of those, 85% were cancelled by the
-        traveller before pickup.
-      </p>
-      <p>
-        The hypothesis was a timing mismatch: the flight had moved, and the cab had not. Flight tracking
-        follows the flight instead of a clock set at booking.
-      </p>
-    </Prose>
-    <ol class="steps" role="list">
-      <li>
-        <span>01</span>
-        <div>
-          <h3>Discovery</h3>
-          <p>
-            Show the flight when there is already a MakeMyTrip flight booking. Ask for the flight details
-            when there isn’t.
-          </p>
-        </div>
-      </li>
-      <li>
-        <span>02</span>
-        <div>
-          <h3>Flight-tracked cab</h3>
-          <p>The tracked cab is added to the booking.</p>
-        </div>
-      </li>
-      <li>
-        <span>03</span>
-        <div>
-          <h3>Post booking</h3>
-          <p>Tracking stays on the post-booking screen.</p>
-        </div>
-      </li>
-    </ol>
-    <CaseBand slot="band" label="Flight tracking">
-      <ul class="metrics metrics--lead" role="list">
-        <li>
-          <span class="metrics__value">75%</span>
-          <span class="metrics__label">Attach</span>
-        </li>
-        <li>
-          <span class="metrics__value">33%</span>
-          <span class="metrics__label">Reduction in cancellation</span>
-        </li>
-      </ul>
-    </CaseBand>
-  </CaseChapter>
+  <StoryBeat
+    index="05"
+    id="luggage"
+    title="Price had become the only decision."
+    line="Price had become the only way to choose. I asked who is travelling, and how many bags."
+    metricLabel="Luggage"
+    screens={[
+      {
+        src: luggageCabs,
+        alt: 'Cab list where each option leads with price, seats, and kilometres.',
+        caption: 'Price, car, fuel, kilometres, seats. Nothing said whether the bags would fit.',
+      },
+      {
+        src: luggageInputs,
+        alt: 'Search form with a Travellers and bags field under the trip start time.',
+        caption: 'Travellers and bags are asked up front, the same kind of input flights and hotels already use.',
+      },
+      {
+        src: luggageFit,
+        alt: 'Results with a recommended Innova marked Best Fit for 4 travellers and 4 bags.',
+        caption: 'One cab is recommended for the party. Others can add a roof carrier when that is what fits.',
+      },
+    ]}
+    metrics={[
+      { value: '4%', label: 'Increase in conversion' },
+      { value: '26%', label: 'Collection rate of luggage and passenger info' },
+    ]}
+  >
+    <p>
+      On the cab selection screen, each option showed the usual basics. Nothing said whether the car
+      could take the people and the bags. Reassurance about fitment follows onto the review, in an
+      explainer sheet.
+    </p>
+    <p slot="more" class="story-more">
+      Best fit was shown on 95% of searches, and on 80% of searches for 4–6 passengers. Clicks on those
+      best-fit cabs, compared with the rest, were 95% overall and 93% for 4–6 passengers.
+    </p>
+  </StoryBeat>
 
-  <CaseNamed />
+  <StoryBeat
+    index="06"
+    id="airport"
+    title="Cancelled before pickup."
+    line="Most of those cancellations happened before pickup. The cab now waits on the flight."
+    metricLabel="Flight tracking"
+    screens={[
+      {
+        src: airportListing,
+        alt: 'Airport cab list with a Flight Tracked Cab note above the cars.',
+        caption: 'The list offers a cab that waits on the flight, not a clock set at booking.',
+      },
+      {
+        src: airportReview,
+        alt: 'Review with a field to enter a flight number for a flight-tracked cab.',
+        caption: 'If MakeMyTrip does not already have the flight, the review asks for it.',
+      },
+      {
+        src: airportTracked,
+        alt: 'Review showing IndiGo 6E 2386 and a note that pickup syncs to landing time.',
+        caption: 'Once the flight is attached, pickup time follows the landing.',
+      },
+    ]}
+    metrics={[
+      { value: '75%', label: 'Attach' },
+      { value: '33%', label: 'Reduction in cancellation' },
+    ]}
+  >
+    <p>
+      Of airport pickup bookings, 20% went unfulfilled. Of those, 85% were cancelled by the traveller
+      before pickup.
+    </p>
+    <p>
+      The hypothesis was a timing mismatch: the flight had moved, and the cab had not. Tracking follows
+      the flight. When a MakeMyTrip flight booking already exists, it can be shown. When it doesn’t, the
+      review asks for the flight. Tracking stays on after booking.
+    </p>
+  </StoryBeat>
+
+  <CaseNamed guideLine="The booking says the trip out loud." />
   <CaseNext next={next} />
 </article>
+
+<style>
+  .case-open {
+    margin-top: var(--case-gap);
+    display: grid;
+    gap: var(--space-4);
+    max-width: 42ch;
+  }
+</style>
